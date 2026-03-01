@@ -336,7 +336,7 @@ with col2:
                         app_base = BASE_URL
                     else:
                         # Fallback to the deployed Streamlit Cloud URL
-                        app_base = "https://testqr-tuhin.streamlit.app"
+                        app_base = "https://qr-forge.streamlit.app"
                     
                     # URL-encode the target URL to handle special characters properly
                     import urllib.parse
@@ -409,14 +409,13 @@ with st.expander("📊 Features & Deployment Guide"):
     
     1. Set the `BASE_URL` environment variable in Streamlit Cloud:
        - Go to your app settings → Secrets
-       - Add: `BASE_URL = "https://your-app-name.streamlit.app"`
+       - Add: `BASE_URL = "https://qr-forge.streamlit.app"`
     
     2. How redirects work:
-       - QR code contains: `https://your-app.streamlit.app?r=https://target.com&t=token`
+       - QR code contains: `https://qr-forge.streamlit.app?r=https://target.com&t=token`
        - When scanned, app checks token expiry
        - If valid, redirects to target URL via JavaScript
     
     3. Note: Users may see a brief flash of the Streamlit page before redirect.
        For instant redirects, use direct URL encoding instead.
     """)
-
