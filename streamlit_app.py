@@ -24,7 +24,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Configuration
-DATA_FILE = "redirects.json"
+DATA_FILE = "s.json"
 MAX_EXPIRY_DAYS = 7
 
 # Get the base URL from environment or Streamlit's built-in
@@ -261,7 +261,7 @@ st.set_page_config(
 # Check for redirect first
 handle_redirect()
 
-st.title("🎯 QR Code Generator with Redirect Service")
+st.title("🎯 QR Forge")
 st.markdown("Generate custom QR codes with expiry-based redirects")
 
 col1, col2 = st.columns([1, 1])
@@ -419,3 +419,4 @@ with st.expander("📊 Features & Deployment Guide"):
     3. Note: Users may see a brief flash of the Streamlit page before redirect.
        For instant redirects, use direct URL encoding instead.
     """)
+
