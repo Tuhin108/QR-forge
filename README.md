@@ -8,20 +8,6 @@ A powerful QR Code Generator built with **Streamlit** and **FastAPI** that creat
 
 The application runs Streamlit on port 8501 with a FastAPI backend running on port 8000 for handling redirects and API requests.
 
-## ✨ Features
-
-| Feature | Description |
-|---------|-------------|
-| 🎨 **Custom QR Codes** | Generate QR codes with custom foreground/background colors |
-| 🖼️ **Logo Overlay** | Add your logo to QR codes (max 25% of QR size) |
-| 📊 **Error Correction** | Choose from L (7%), M (15%), Q (25%), H (30%) levels |
-| ⏰ **Expiry-based Redirects** | Set QR codes to expire from 1 minute to 7 days |
-| 📈 **Scan Analytics** | Track how many times each QR code has been scanned |
-| 💾 **JSON Persistence** | Redirect data persists in `redirects.json` |
-| 📦 **Multiple Formats** | Export as PNG or SVG |
-| ⚡ **Rate Limiting** | API limited to 10 requests per minute per IP |
-| 🔗 **Direct URL Mode** | Option to encode target URL directly without redirect |
-| 🔌 **RESTful API** | Full API for programmatic QR generation |
 
 ## 🧰 Tech Stack
 
