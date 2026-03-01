@@ -331,14 +331,12 @@ with col2:
                     # For local: http://localhost:8501/?r=https://target.com&t=token
                     # For deployed: https://your-app.streamlit.app/?r=https://target.com&t=token
                     
-                    # Try to get the base URL from Streamlit context
+                    # Get the base URL - prefer environment variable, fallback to deployed URL
                     if BASE_URL:
                         app_base = BASE_URL
                     else:
-                        # Fallback: construct from request
-                        # Streamlit doesn't provide easy access to base URL
-                        # User should set BASE_URL env var for production
-                        app_base = "http://localhost:8501"
+                        # Fallback to the deployed Streamlit Cloud URL
+                        app_base = "https://tuhin-testqr.streamlit.app"
                     
                     redirect_url = f"{app_base}?r={url}&t={token}"
                     
