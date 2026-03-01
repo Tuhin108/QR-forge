@@ -18,6 +18,7 @@ from pathlib import Path
 import segno
 from PIL import Image
 import streamlit as st
+import streamlit.components.v1 as components
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -55,15 +56,25 @@ def handle_redirect():
                 show_expired_page()
                 return
         
-        # Perform redirect using JavaScript
+        # 1. Show a clean redirecting message with a manual fallback link
         st.markdown(f"""
-            <script>
-                window.top.location.href = "{target_url}";
-            </script>
-            <div style="display:flex;justify-content:center;align-items:center;height:100vh;">
-                <p>Redirecting...</p>
+            <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; height:80vh; font-family: sans-serif;">
+                <h2>Redirecting...</h2>
+                <p>If you are not redirected automatically, <a href="{target_url}">click here</a>.</p>
             </div>
         """, unsafe_allow_html=True)
+        
+        # 2. Perform the actual redirect using components.html
+        # We use window.parent.location.href because components run in an iframe
+        components.html(
+            f"""
+            <script>
+                window.parent.location.href = "{target_url}";
+            </script>
+            """,
+            height=0,
+            width=0
+        )
         st.stop()
 
 
@@ -418,3 +429,4 @@ with st.expander("📊 Features & Deployment Guide"):
     3. Note: Users may see a brief flash of the Streamlit page before redirect.
        For instant redirects, use direct URL encoding instead.
     """)
+
