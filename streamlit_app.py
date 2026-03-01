@@ -414,31 +414,21 @@ with col2:
                     st.error(f"❌ Error generating QR code: {str(e)}")
                     
 
-# Footer
+# ============================================================================
+# FOOTER
+# ============================================================================
 st.divider()
 
-with st.expander("📊 Features & Deployment Guide"):
-    st.markdown("""
-    ### Features
-    - Custom colors and error correction levels
-    - Optional logo overlay (maintains scannability)
-    - Expiry-based redirects with token management
-    - JSON file persistence and GitHub Analytics Push
-    - Scan tracking dashboard
-    
-    ### Deployment to Streamlit Cloud
-    
-    1. Set the `BASE_URL` environment variable in Streamlit Cloud:
-       - Go to your app settings → Secrets
-       - Add: `BASE_URL = "https://qr-forge.streamlit.app"`
-    
-    2. Add your GitHub Token:
-       - Go to your app settings → Secrets
-       - Add: `GITHUB_TOKEN = "ghp_your_token_here"`
-    
-    3. How redirects work:
-       - QR code contains: `https://qr-forge.streamlit.app?r=https://target.com&t=token`
-       - When scanned, app checks token expiry
-       - If valid, redirects to target URL via JavaScript
-    """)
-
+# Added custom HTML for a centered, professional footer
+st.markdown(
+    """
+    <div style='text-align: center; margin-top: 20px;'>
+        <p style='color: #4a5568; font-size: 16px;'>Built with ❤️ by <b>Tuhin Kumar Singha Roy</b></p>
+        <p>
+            <a href="https://www.linkedin.com/in/tuhininaiml" target="_blank" style="text-decoration: none; margin-right: 15px; color: #0077B5; font-weight: bold;">🔗 LinkedIn</a>
+            <a href="https://github.com/Tuhin108" target="_blank" style="text-decoration: none; color: #333; font-weight: bold;">💻 GitHub</a>
+        </p>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
