@@ -338,7 +338,10 @@ with col2:
                         # Fallback to the deployed Streamlit Cloud URL
                         app_base = "https://tuhin-testqr.streamlit.app"
                     
-                    redirect_url = f"{app_base}?r={url}&t={token}"
+                    # URL-encode the target URL to handle special characters properly
+                    import urllib.parse
+                    encoded_url = urllib.parse.quote(url, safe='')
+                    redirect_url = f"{app_base}?r={encoded_url}&t={token}"
                     
                     # Process logo
                     logo_image = None
