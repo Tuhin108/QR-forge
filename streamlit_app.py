@@ -336,7 +336,7 @@ with col2:
                         app_base = BASE_URL
                     else:
                         # Fallback to the deployed Streamlit Cloud URL
-                        app_base = "https://tuhin-testqr.streamlit.app"
+                        app_base = "https://testqr-tuhin.streamlit.app"
                     
                     # URL-encode the target URL to handle special characters properly
                     import urllib.parse
