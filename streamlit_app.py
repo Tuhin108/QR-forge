@@ -235,7 +235,7 @@ def generate_artistic_qr(
     qr_data: str,
     art_image: Image.Image,
     error_level: str = "H",
-
+    bg_style: str = "White",
     saturation: float = 1.3,
     module_size: int = 16,
 ) -> bytes:
