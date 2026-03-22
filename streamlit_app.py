@@ -269,7 +269,7 @@ def generate_artistic_qr(
     #     pixel maps 1-to-1 onto one QR module ---
     art = art_image.convert("RGB")
     art = ImageEnhance.Contrast(art).enhance(1.2)
-    art = ImageEnhance.Saturation(art).enhance(saturation)
+    art = ImageEnhance.Color(art).enhance(saturation)
     art_small = art.resize((n_cols, n_rows), Image.Resampling.LANCZOS)
     art_pixels = np.array(art_small, dtype=np.uint8)   # shape (n_rows, n_cols, 3)
 
