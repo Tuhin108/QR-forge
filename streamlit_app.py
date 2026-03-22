@@ -130,29 +130,24 @@ def load_data() -> dict:
 
 def save_data(data: dict):
     """Save redirect data locally AND push to GitHub automatically"""
-    # 1. Save locally first (keeps the app fast)
     try:
         with open(DATA_FILE, 'w') as f:
             json.dump(data, f, indent=2)
     except IOError as e:
         logger.error(f"Failed to save data locally: {e}")
 
-    # 2. The Auto-Push Pipeline to GitHub
     try:
-        # Pulling your GitHub token from Streamlit's secure secrets
         if "GITHUB_TOKEN" in st.secrets:
             github_token = st.secrets["GITHUB_TOKEN"] 
             
-            repo = "Tuhin108/qr-forge" # Your exact GitHub repo
+            repo = "Tuhin108/qr-forge" 
             path = "analytics.json"
             url = f"https://api.github.com/repos/{repo}/contents/{path}"
             headers = {"Authorization": f"token {github_token}"}
             
-            # Check if analytics.json already exists to get its 'sha' (required by GitHub to update files)
             get_resp = requests.get(url, headers=headers)
             sha = get_resp.json().get("sha") if get_resp.status_code == 200 else None
             
-            # Encode the data and push the commit
             encoded_content = base64.b64encode(json.dumps(data, indent=2).encode()).decode()
             payload = {
                 "message": "📊 Auto-updating QR scan analytics",
@@ -161,7 +156,6 @@ def save_data(data: dict):
             if sha:
                 payload["sha"] = sha
                 
-            # Send it to GitHub
             requests.put(url, headers=headers, json=payload)
             
     except Exception as e:
@@ -230,9 +224,10 @@ def generate_qr_code(
     bg_color: str = "#ffffff",
     error_level: str = "M",
     logo_image: Optional[Image.Image] = None,
+    background_image: Optional[Image.Image] = None,
     scale: int = 10
 ) -> tuple[bytes, bytes]:
-    """Generate QR code with custom styling and optional logo"""
+    """Generate QR code with custom styling, optional background, and optional logo"""
     error_map = {"L": "l", "M": "m", "Q": "q", "H": "h"}
     error = error_map.get(error_level.upper(), "m")
     
@@ -242,12 +237,20 @@ def generate_qr_code(
     qr.save(png_buffer, kind="png", scale=scale, dark=fg_color, light=bg_color)
     png_buffer.seek(0)
     
+    qr_image = Image.open(png_buffer).convert("RGBA")
+
+    # Add background blending if a picture was uploaded
+    if background_image:
+        bg = background_image.convert("RGBA").resize(qr_image.size)
+        # Mix the images together. You can change 0.65 to adjust how clear the QR code is.
+        qr_image = Image.blend(bg, qr_image, alpha=0.65)
+    
     if logo_image:
-        qr_image = Image.open(png_buffer).convert("RGBA")
         qr_image = add_logo_to_qr(qr_image, logo_image)
-        png_buffer = io.BytesIO()
-        qr_image.save(png_buffer, format="PNG")
-        png_buffer.seek(0)
+        
+    png_buffer = io.BytesIO()
+    qr_image.save(png_buffer, format="PNG")
+    png_buffer.seek(0)
     
     png_bytes = png_buffer.getvalue()
     
@@ -260,7 +263,7 @@ def generate_qr_code(
 
 
 def add_logo_to_qr(qr_image: Image.Image, logo: Image.Image) -> Image.Image:
-    """Add centered logo to QR code (max 25% of QR size)"""
+    """Add centered logo to QR code"""
     qr_width, qr_height = qr_image.size
     max_logo_size = int(min(qr_width, qr_height) * 0.25)
     
@@ -337,10 +340,16 @@ with col1:
         help="Higher = larger image"
     )
     
+    bg_file = st.file_uploader(
+        "Background Picture (Optional)",
+        type=["png", "jpg", "jpeg"],
+        help="Upload an image to mix into the whole QR code"
+    )
+
     logo_file = st.file_uploader(
         "Logo (Optional)",
         type=["png", "jpg", "jpeg"],
-        help="Upload a logo to overlay on the QR code"
+        help="Upload a logo to overlay on the center of the QR code"
     )
     
     generate_btn = st.button("🎨 Generate QR Code", type="primary", use_container_width=True)
@@ -368,6 +377,14 @@ with col2:
                     encoded_url = urllib.parse.quote(url, safe='')
                     redirect_url = f"{app_base}?r={encoded_url}&t={token}"
                     
+                    background_image = None
+                    if bg_file is not None:
+                        try:
+                            background_image = Image.open(bg_file)
+                        except Exception as e:
+                            st.error(f"❌ Invalid background image: {str(e)}")
+                            background_image = None
+
                     logo_image = None
                     if logo_file is not None:
                         try:
@@ -377,7 +394,7 @@ with col2:
                             logo_image = None
 
                     png_bytes, svg_bytes = generate_qr_code(
-                        redirect_url, fg_color, bg_color, error_level, logo_image, scale
+                        redirect_url, fg_color, bg_color, error_level, logo_image, background_image, scale
                     )
                     
                     st.image(png_bytes, use_container_width=True)
@@ -419,7 +436,6 @@ with col2:
 # ============================================================================
 st.divider()
 
-# Added custom HTML for a centered, professional footer
 st.markdown(
     """
     <div style='text-align: center; margin-top: 20px;'>
