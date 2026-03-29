@@ -13,7 +13,7 @@ import logging
 import requests
 import numpy as np
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional, Any, cast, Tuple, Literal
 
 from pathlib import Path
@@ -233,7 +233,7 @@ def save_data(data: dict):
 
 
 def store_redirect(token: str, url: str, expiry_minutes: int) -> dict:
-    created_at = datetime.utcnow()
+    created_at = datetime.now(timezone.utc)
     expires_at = created_at + timedelta(minutes=expiry_minutes)
     data = load_data()
     data[token] = {
@@ -253,7 +253,12 @@ def get_redirect(token: str) -> Optional[dict]:
         return None
     redirect = data[token]
     expires_at = datetime.fromisoformat(redirect["expires_at"])
-    if datetime.utcnow() > expires_at:
+    
+    # Fallback: Make old naive timestamps timezone-aware so Python doesn't crash
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+        
+    if datetime.now(timezone.utc) > expires_at:
         return None
     return redirect
 
