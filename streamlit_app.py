@@ -618,7 +618,7 @@ with tab_art:
         art_url        = st.text_input("Target URL", placeholder="https://example.com", key="art_url")
         art_image_file = st.file_uploader("Upload Image", type=["png","jpg","jpeg","webp"], key="art_img")
         art_error      = st.selectbox("Error Correction", ["M","Q","H"], index=2, key="art_err")
-        art_bg         = st.selectbox("Background Style", ["Green","Image tint","Transparent"])
+        art_bg         = st.selectbox("Background Style", ["White","Image tint","Transparent"])
         art_saturation = st.slider("Color Saturation", 0.5, 2.5, 1.3, 0.1)
         art_module_px  = st.slider("Module Size (px)", 8, 24, 16, 2)
         art_expiry     = st.slider("Expiry (minutes)", 1, MAX_EXPIRY_DAYS * 24 * 60, 60, key="art_exp")
